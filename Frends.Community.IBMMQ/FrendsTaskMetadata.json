@@ -1,0 +1,16 @@
+﻿{
+  "Tasks": [
+    {
+      "TaskMethod": "Frends.Community.IBMMQ.GetMessagesTask.GetMessages"
+    },
+    {
+      "TaskMethod": "Frends.Community.IBMMQ.GetQueueStatusTask.GetQueueStatus"
+    },
+    {
+      "TaskMethod": "Frends.Community.IBMMQ.PutMessageTask.PutMessage"
+    },
+    {
+      "TaskMethod": "Frends.Community.IBMMQ.PeekMessageTask.PeekMessage"
+    }
+  ]
+}

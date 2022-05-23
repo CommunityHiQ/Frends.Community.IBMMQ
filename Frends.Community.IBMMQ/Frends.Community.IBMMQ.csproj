@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <authors>HiQ Finland</authors>
+    <copyright>HiQ Finland</copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/CommunityHiQ/Frends.Community.IBMMQ</PackageProjectUrl>
+    <Description>Tasks to send/get messages to/from IBM MQ</Description>
+    <IncludeSource>true</IncludeSource>
+    <PackageTags>Frends</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.76</Version>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <None Include="FrendsTaskMetadata.json" Pack="true" PackagePath="/">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<PackageReference Include="IBMMQDotnetClient" Version="9.2.5" />--> 
+    <Reference Include="amqmdnetstd, Version=9.2.5.0, Culture=neutral, PublicKeyToken=23d6cb914eeaac0e">
+      <HintPath>..\IBMMQ\amqmdnetstd.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+
+    <Reference Include="System.ComponentModel.Annotations, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\IBMMQ\System.ComponentModel.Annotations.dll</HintPath>
+      <SpecificVersion>false</SpecificVersion>
+      <Private>true</Private>
+    </Reference>
+
+    <!--<PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />-->
+  </ItemGroup>
+
+</Project>
