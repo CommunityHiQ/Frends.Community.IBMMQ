@@ -70,11 +70,6 @@ namespace Frends.Community.IBMMQ
                             {
                                 throw new Exception($"Exception received. Details: {ex.Message}");
                             }
-#if DEBUG
-                            if (input.DebugTransaction)
-                                // Sleep for 1s if debugging of the Transaction
-                                Thread.Sleep(1000);
-#endif
                         }
                         queue.Close();
 

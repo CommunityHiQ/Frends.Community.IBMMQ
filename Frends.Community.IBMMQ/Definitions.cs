@@ -20,8 +20,8 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Queue names
         /// </summary>
-        [DefaultValue("DEV.QUEUE.1")]
-        [DisplayFormat(DataFormatString = "Text")]
+        //[DefaultValue("DEV.QUEUE.1")]
+        //[DisplayFormat(DataFormatString = "Text")]
         public string[] Queues { get; set; }
     }
 
@@ -30,33 +30,33 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Queue name to put message to
         /// </summary>
-        [DefaultValue("DEV.QUEUE.1")]
-        [DisplayFormat(DataFormatString = "Text")]
+        //[DefaultValue("DEV.QUEUE.1")]
+        //[DisplayFormat(DataFormatString = "Text")]
         public string Queue { get; set; }
 
         /// <summary>
         /// Maximum number of messages to get
         /// </summary>
-        [DefaultValue(1)]
+        //[DefaultValue(1)]
         public int MessageCount { get; set; }
 
         /// <summary>
         /// If set to true, message contents are returned as a byte array. 
         /// Return field name is MessageBytes instead of Message
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool MessageAsBytes { get; set; }
 
         /// <summary>
         /// Return Message properties in addition to the actual message
         /// </summary>
-        [DefaultValue(true)]
+        //[DefaultValue(true)]
         public bool GetMessageProperties { get; set; }
 
         /// <summary>
         /// Return Message descriptor information in addition to the actual message
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool GetMessageDescriptor { get; set; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Frends.Community.IBMMQ
         /// 
         /// This can be set to true with no ill effect even if the message doesn't have RFH2 headers.
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool ParseRFH2Header { get; set; }
 
         /// <summary>
@@ -74,33 +74,23 @@ namespace Frends.Community.IBMMQ
         /// If set to Yes, when getting multiple messages one by one from the queue they are rolled back in case
         /// there is an error or the task is cancelled.
         /// </summary>
-        [DefaultValue(true)]
+        //[DefaultValue(true)]
         public bool UseTransaction { get; set; }
 
         /// <summary>
         /// Transaction type used.
         /// Default is Required which means an ambient transaction (current thread's transaction) is used if present and new transaction created if not.
         /// </summary>
-        [UIHint(nameof(UseTransaction), "", true)]
-        [DefaultValue(TransactionType.Required)]
+        //[UIHint(nameof(UseTransaction), "", true)]
+        //[DefaultValue(TransactionType.Required)]
         public TransactionType TransactionType { get; set; }
 
         /// <summary>
         /// Transaction timeout used, default is 60 seconds.
         /// </summary>
-        [UIHint(nameof(UseTransaction), "", true)]
-        [DefaultValue(60)]
+        //[UIHint(nameof(UseTransaction), "", true)]
+        //[DefaultValue(60)]
         public int TransactionTimeout { get; set; }
-
-#if DEBUG
-        /// <summary>
-        /// If using a transaction when getting messages
-        /// sleep for 1s between each message if this is set to Yes.
-        /// </summary>
-        [UIHint(nameof(UseTransaction), "", true)]
-        [DefaultValue(false)]
-        public bool DebugTransaction { get; set; }
-#endif
     }
 
     public class PeekMessageTaskParameters
@@ -109,27 +99,27 @@ namespace Frends.Community.IBMMQ
         /// Queue name to peek message from
         /// </summary>
         //[UIHint(nameof(SourceType), "", QueueOrTopicType.Queue)]
-        [DefaultValue("DEV.QUEUE.1")]
-        [DisplayFormat(DataFormatString = "Text")]
+        //[DefaultValue("DEV.QUEUE.1")]
+        //[DisplayFormat(DataFormatString = "Text")]
         public string Queue { get; set; }
 
         /// <summary>
         /// If set to true, message contents are returned as a byte array. 
         /// Return field name is MessageBytes instead of Message
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool MessageAsBytes { get; set; }
 
         /// <summary>
         /// Return Message properties in addition to the actual message
         /// </summary>
-        [DefaultValue(true)]
+        //[DefaultValue(true)]
         public bool GetMessageProperties { get; set; }
 
         /// <summary>
         /// Return Message descriptor information in addition to the actual message
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool GetMessageDescriptor { get; set; }
 
         /// <summary>
@@ -138,7 +128,7 @@ namespace Frends.Community.IBMMQ
         /// 
         /// This can be set to true with no ill effect even if the message doesn't have RFH2 headers.
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool ParseRFH2Header { get; set; }
     }
 
@@ -147,28 +137,28 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Queue name to put message to
         /// </summary>
-        [DefaultValue("DEV.QUEUE.1")]
-        [DisplayFormat(DataFormatString = "Text")]
+        //[DefaultValue("DEV.QUEUE.1")]
+        //[DisplayFormat(DataFormatString = "Text")]
         public string Queue { get; set; }
 
         /// <summary>
         /// If set to true, message contents are returned as a byte array. 
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool MessageAsBytes { get; set; }
 
         /// <summary>
         /// Message content as byte array
         /// </summary>
-        [UIHint(nameof(MessageAsBytes), "", true)]
-        [DisplayFormat(DataFormatString = "Expression")]
+        //[UIHint(nameof(MessageAsBytes), "", true)]
+        //[DisplayFormat(DataFormatString = "Expression")]
         public byte[] MessageContentBytes { get; set; }
 
         /// <summary>
         /// Message content as text
         /// </summary>
-        [UIHint(nameof(MessageAsBytes), "", false)]
-        [DisplayFormat(DataFormatString = "Expression")]
+        //[UIHint(nameof(MessageAsBytes), "", false)]
+        //[DisplayFormat(DataFormatString = "Expression")]
         public string MessageContent { get; set; }
     }
 
@@ -177,19 +167,19 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Host name
         /// </summary>
-        [DefaultValue("localhost")]
+        //[DefaultValue("localhost")]
         public string HostName { get; set; }
 
         /// <summary>
         /// Port number
         /// </summary>
-        [DefaultValue(1414)]
+        //[DefaultValue(1414)]
         public int PortNumber { get; set; }
 
         /// <summary>
         /// MQ Channel to be used
         /// </summary>
-        [DefaultValue("SYSTEM.DEF.SVRCONN")]
+        //[DefaultValue("SYSTEM.DEF.SVRCONN")]
         public string Channel { get; set; }
 
         /// <summary>
@@ -205,7 +195,7 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Password
         /// </summary>
-        [PasswordPropertyText]
+        //[PasswordPropertyText]
         public string Password { get; set; }
 
     }
@@ -247,17 +237,17 @@ namespace Frends.Community.IBMMQ
         /// 
         /// Used ONLY if messages is sent as text (not as bytes).
         /// </summary>
-        [DefaultValue(CharacterSetEnum.UTF8)]
-        [DisplayName("Character set")]
+        //[DefaultValue(CharacterSetEnum.UTF8)]
+        //[DisplayName("Character set")]
         public CharacterSetEnum CharacterSet { get; set; }
 
         /// <summary>
         /// Character set for the message as integer code value.
         /// Integer values in IBM MQ Documentation: https://www.ibm.com/docs/en/ibm-mq/9.2?topic=interfaces-character-set-identifiers-net-applications
         /// </summary>
-        [UIHint(nameof(CharacterSet), "", CharacterSetEnum.Other)]
-        [DisplayName(@"Character set value")]
-        [DisplayFormat(DataFormatString = "Expression")]
+        //[UIHint(nameof(CharacterSet), "", CharacterSetEnum.Other)]
+        //[DisplayName(@"Character set value")]
+        //[DisplayFormat(DataFormatString = "Expression")]
         public int? CharacterSetValue { get; set; }
 
         /// <summary>
@@ -277,14 +267,14 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Set this to true, if RFH2 headers are required to be written to the beginning of the actual message.
         /// </summary>
-        [DefaultValue(false)]
+        //[DefaultValue(false)]
         public bool SetRFH2Headers { get; set; }
 
         /// <summary>
         /// You can set individual values or leave empty when default values are used. NB: Only one NameValueData field is allowed.
         /// Header names, types and default values from IBM MQ Documentation: https://www.ibm.com/docs/en/ibm-mq/9.2?topic=2-initial-values-language-declarations-mqrfh2
         /// </summary>
-        [UIHint(nameof(SetRFH2Headers), "", true)]
+        //[UIHint(nameof(SetRFH2Headers), "", true)]
         public RFH2HeaderProperty[] RFH2Headers { get; set; }
 
     }
