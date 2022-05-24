@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Frends.Community.IBMMQ.Tests
@@ -31,10 +32,14 @@ namespace Frends.Community.IBMMQ.Tests
                 },
                 new PutMessageProperties
                 {
-                    CharacterSet = CharacterSetEnum.UTF8
+                    CharacterSet = CharacterSetEnum.UTF8,
+                    Descriptors = Array.Empty<MessageDescriptorProperty>(),
+                    Properties = Array.Empty<MessageProperty>(),
+                    SetRFH2Headers = true,
+                    RFH2Headers = new RFH2HeaderProperty[1] { new RFH2HeaderProperty { Name = "NameValueData", Value = "TestDataÄÄ" } }
                 },
                 new CancellationToken());
-            
+
             Assert.AreEqual(true, output.Success);
         }
     }

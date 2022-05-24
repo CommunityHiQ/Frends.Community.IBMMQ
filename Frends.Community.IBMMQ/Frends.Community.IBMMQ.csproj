@@ -10,7 +10,7 @@
     <IncludeSource>true</IncludeSource>
     <PackageTags>Frends</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.76</Version>
+    <Version>1.0.87</Version>
   </PropertyGroup>
 
 
@@ -22,19 +22,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="IBMMQDotnetClient" Version="9.2.5" />--> 
-    <Reference Include="amqmdnetstd, Version=9.2.5.0, Culture=neutral, PublicKeyToken=23d6cb914eeaac0e">
+    <PackageReference Include="IBMMQDotnetClient" Version="9.2.5" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    
+    <!--<Reference Include="amqmdnetstd, Version=9.2.5.0, Culture=neutral, PublicKeyToken=23d6cb914eeaac0e">
       <HintPath>..\IBMMQ\amqmdnetstd.dll</HintPath>
       <Private>true</Private>
-    </Reference>
+    </Reference>-->
 
-    <Reference Include="System.ComponentModel.Annotations, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <!--<Reference Include="System.ComponentModel.Annotations, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\IBMMQ\System.ComponentModel.Annotations.dll</HintPath>
       <SpecificVersion>false</SpecificVersion>
       <Private>true</Private>
-    </Reference>
+    </Reference>-->
 
-    <!--<PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />-->
   </ItemGroup>
 
 </Project>

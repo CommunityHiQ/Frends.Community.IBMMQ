@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using IBM.WMQ;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Frends.Community.IBMMQ.Helpers;
 
 #pragma warning disable 1591
 
@@ -29,11 +27,9 @@ namespace Frends.Community.IBMMQ
 
     public class GetMessagesTaskParameters
     {
-
         /// <summary>
         /// Queue name to put message to
         /// </summary>
-        //[UIHint(nameof(SourceType), "", QueueOrTopicType.Queue)]
         [DefaultValue("DEV.QUEUE.1")]
         [DisplayFormat(DataFormatString = "Text")]
         public string Queue { get; set; }
@@ -269,7 +265,6 @@ namespace Frends.Community.IBMMQ
         /// 
         /// Some values are derived and cannot be set explicitly.
         /// </summary>
-        //[UIHint(nameof(UseMQMessageProperties), "", false)]
         public MessageProperty[] Properties { get; set; }
 
         /// <summary>
@@ -277,7 +272,6 @@ namespace Frends.Community.IBMMQ
         /// 
         /// Some values are derived and cannot be set explicitly.
         /// </summary>
-        //[UIHint(nameof(UseMQMessageProperties), "", false)]
         public MessageDescriptorProperty[] Descriptors { get; set; }
 
         /// <summary>
@@ -367,25 +361,36 @@ namespace Frends.Community.IBMMQ
     #endregion
 
 
+    /// <summary>
+    /// Message property, value can be multiple types.
+    /// </summary>
     public class MessageProperty
     {
         public string Name { get; set; }
         public object Value { get; set; }
     }
 
+    /// <summary>
+    /// Message Descriptor property, value can be multiple types.
+    /// </summary>
     public class MessageDescriptorProperty
     {
         public string Name { get; set; }
         public object Value { get; set; }
     }
 
-   
+    /// <summary>
+    /// RHF2 Header property, value can be multiple types.
+    /// </summary>
     public class RFH2HeaderProperty
     {
         public string Name { get; set; }
         public object Value { get; set; }
     }
 
+    /// <summary>
+    /// RFH2 Header fields
+    /// </summary>
     public class RFH2Headers
     {
         /// <summary>
@@ -407,7 +412,7 @@ namespace Frends.Community.IBMMQ
         /// IBM MQ type: MQLONG
         /// </summary>
         public int Flags { get; set; }
-        
+
         /// <summary>
         /// Max length of 8 characters
         /// IBM MQ type: MQCHAR8
@@ -453,13 +458,15 @@ namespace Frends.Community.IBMMQ
         public RFH2Headers()
         {
             // Set default values
-            StrucId = MQC.MQRFH_STRUC_ID;
-            Version = MQC.MQRFH_VERSION_2;
-            StrucLength = MQC.MQRFH_STRUC_LENGTH_FIXED_2;
-            Encoding = MQC.MQENC_NATIVE;
-            CodedCharSetId = MQC.MQCCSI_INHERIT;
-            Format = MQC.MQFMT_NONE;
-            Flags = MQC.MQRFH_NONE;
+            // Refrences to MQ Constants shown but unused directly due to frends-functionalities
+            // (unallowed to use external libraries in task input/output classes)
+            StrucId = "RFH ";       // MQC.MQRFH_STRUC_ID;
+            Version = 2;            // MQC.MQRFH_VERSION_2;
+            StrucLength = 36;       // MQC.MQRFH_STRUC_LENGTH_FIXED_2;
+            Encoding = 546;         // MQC.MQENC_NATIVE;
+            CodedCharSetId = -1;    // MQC.MQCCSI_INHERIT;
+            Format = "        ";    // MQC.MQFMT_NONE;
+            Flags = 0;              // MQC.MQRFH_NONE;
             NameValueCCSID = 1208;
             NameValueData = "";
             NameValueLength = 0;
@@ -476,6 +483,9 @@ namespace Frends.Community.IBMMQ
         public RFH2Headers Headers { get; set; }
     }
 
+    /// <summary>
+    /// Message Properties
+    /// </summary>
     public class MessageProperties
     {
         public int TotalMessageLength { get; set; }
@@ -543,11 +553,47 @@ namespace Frends.Community.IBMMQ
         public int Encoding { get; set; }
     }
 
-    public class MessageDescriptor : MQMessageDescriptor
+    /// <summary>
+    /// Message Descriptors, same properties as the IBM MQ Message Descriptor object (MQMessageDescriptor)
+    /// StructMQMD is not of its original IMB MQ Type, instead it is a generic object.
+    /// </summary>
+    public class MessageDescriptor
     {
-
+        public int Offset { get; set; }
+        public int MsgSequenceNumber { get; set; }
+        public byte[] GroupID { get; set; }
+        public byte[] ApplOriginData { get; set; }
+        public byte[] PutTime { get; set; }
+        public byte[] PutDate { get; set; }
+        public byte[] PutApplName { get; set; }
+        public int PutApplType { get; set; }
+        public byte[] ApplIdentityData { get; set; }
+        public byte[] AccountingToken { get; set; }
+        public byte[] UserID { get; set; }
+        public byte[] ReplyToQueueMgr { get; set; }
+        public byte[] ReplyToQueue { get; set; }
+        public int Persistence { get; set; }
+        public int Priority { get; set; }
+        public byte[] Format { get; set; }
+        public int CodedCharacterSetId { get; set; }
+        public object StructMQMD { get; set; }
+        public int Version { get; set; }
+        public int Encoding { get; set; }
+        public int MsgFlags { get; set; }
+        public int Ccsid { get; set; }
+        public int BackoutCount { get; set; }
+        public byte[] CorrelId { get; set; }
+        public int Report { get; set; }
+        public int MsgType { get; set; }
+        public int Expiry { get; set; }
+        public int Feedback { get; set; }
+        public byte[] MsgId { get; set; }
+        public int OriginalLength { get; set; }
     }
 
+    /// <summary>
+    /// Internal object for a MQ Message.
+    /// </summary>
     public class QueueMessage
     {
         public string Message { get; set; }
@@ -559,96 +605,5 @@ namespace Frends.Community.IBMMQ
         public MessageDescriptor MessageDescriptor { get; set; }
 
         public RFH2Headers RFH2Headers { get; set; }
-
-        public static QueueMessage FromMqMessage(MQMessage mqMessage, bool asBytes, bool returnMQProperties = true, bool returnMQMD = false, bool returnAndStripRFH2Header = false)
-        {
-            var rfh2Result = new MessageAndRFH2Header() { RFH2HeadersFound = false };
-
-            // Try to extract RFH2 headers only if requested
-            if (returnAndStripRFH2Header)
-                rfh2Result = IBMMQHelpers.ReadAndStripRFH2Header(mqMessage);
-
-            return new QueueMessage
-            {
-                // Include properties only if required
-                MessageProperties = !returnMQProperties ? null : new MessageProperties
-                {
-                    Encoding = mqMessage.Encoding,
-                    Expiry = mqMessage.Expiry,
-                    Feedback = mqMessage.Feedback,
-                    Format = mqMessage.Format.Trim(),
-                    Offset = mqMessage.Offset,
-                    Persistence = mqMessage.Persistence,
-                    Priority = mqMessage.Priority,
-                    Report = mqMessage.Report,
-                    Version = mqMessage.Version,
-                    AccountingToken = mqMessage.AccountingToken,
-                    BackoutCount = mqMessage.BackoutCount,
-                    CharacterSet = mqMessage.CharacterSet,
-                    CorrelationId = mqMessage.CorrelationId,
-                    DataLength = mqMessage.DataLength,
-                    DataOffset = mqMessage.DataOffset,
-                    GroupId = mqMessage.GroupId,
-                    MessageFlags = mqMessage.MessageFlags,
-                    MessageId = mqMessage.MessageId,
-                    MessageLength = mqMessage.MessageLength,
-                    MessageType = mqMessage.MessageType,
-                    OriginalLength = mqMessage.OriginalLength,
-                    PropertyValidation = mqMessage.PropertyValidation,
-                    UserId = mqMessage.UserId.Trim(),
-                    ApplicationIdData = mqMessage.ApplicationIdData.Trim(),
-                    ApplicationOriginData = mqMessage.ApplicationOriginData.Trim(),
-                    MessageSequenceNumber = mqMessage.MessageSequenceNumber,
-                    PutApplicationName = mqMessage.PutApplicationName.Trim(),
-                    PutApplicationType = mqMessage.PutApplicationType,
-                    PutDateTime = mqMessage.PutDateTime,
-                    TotalMessageLength = mqMessage.TotalMessageLength,
-                    ReplyToQueueName = mqMessage.ReplyToQueueName.Trim(),
-                    ReplyToQueueManagerName = mqMessage.ReplyToQueueManagerName.Trim()
-                },
-
-                // Return MessageDescriptor only if requested
-                MessageDescriptor = !returnMQMD ? null : new MessageDescriptor
-                {
-                    StructMQMD = mqMessage.MQMD.StructMQMD,
-                    Version = mqMessage.MQMD.Version,
-                    Encoding = mqMessage.MQMD.Encoding,
-                    BackoutCount = mqMessage.MQMD.BackoutCount,
-                    Ccsid = mqMessage.MQMD.Ccsid,
-                    MsgId = mqMessage.MQMD.MsgId,
-                    CorrelId = mqMessage.MQMD.CorrelId,
-                    Report = mqMessage.MQMD.Report,
-                    MsgType = mqMessage.MQMD.MsgType,
-                    Expiry = mqMessage.MQMD.Expiry,
-                    Feedback = mqMessage.MQMD.Feedback,
-                    CodedCharacterSetId = mqMessage.MQMD.CodedCharacterSetId,
-                    Format = mqMessage.MQMD.Format,
-                    Priority = mqMessage.MQMD.Priority,
-                    Persistence = mqMessage.MQMD.Persistence,
-                    ReplyToQueue = mqMessage.MQMD.ReplyToQueue,
-                    ReplyToQueueMgr = mqMessage.MQMD.ReplyToQueueMgr,
-                    UserID = mqMessage.MQMD.UserID,
-                    AccountingToken = mqMessage.MQMD.AccountingToken,
-                    ApplIdentityData = mqMessage.MQMD.ApplIdentityData,
-                    PutApplType = mqMessage.MQMD.PutApplType,
-                    PutApplName = mqMessage.MQMD.PutApplName,
-                    PutDate = mqMessage.MQMD.PutDate,
-                    PutTime = mqMessage.MQMD.PutTime,
-                    ApplOriginData = mqMessage.MQMD.ApplOriginData,
-                    GroupID = mqMessage.MQMD.GroupID,
-                    MsgSequenceNumber = mqMessage.MQMD.MsgSequenceNumber,
-                    Offset = mqMessage.MQMD.Offset,
-                    MsgFlags = mqMessage.MQMD.MsgFlags,
-                    OriginalLength = mqMessage.MQMD.OriginalLength,
-                },
-
-                // RFH2 headers is null if not found or not even tried to extract
-                RFH2Headers = !rfh2Result.RFH2HeadersFound ? null : rfh2Result.Headers,
-
-                // Only Message or MessageBytes is set, field depends whether Messages was requested as bytes or as text
-                Message = !asBytes ? mqMessage.ReadString(mqMessage.MessageLength) : null,
-                MessageBytes = asBytes ? mqMessage.ReadBytes(mqMessage.MessageLength) : null
-            };
-        }
     }
 }

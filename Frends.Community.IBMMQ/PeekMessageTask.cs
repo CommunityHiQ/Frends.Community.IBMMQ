@@ -17,7 +17,7 @@ namespace Frends.Community.IBMMQ
         /// <param name="connection"></param>
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns>Object { bool MessageFound, QueueMessage Data } where Data contains one QueueMessage if any and MessageFound is true when a message was found, otherwise false</returns>
+        /// <returns>Object { bool MessageFound, QueueMessage Data } where Data contains a QueueMessage if any and MessageFound is true when a message was found, otherwise false</returns>
         public static PeekMessageOutput PeekMessage(
             [PropertyTab] PeekMessageTaskParameters input,
             [PropertyTab] ConnectionParameters connection,
@@ -46,7 +46,7 @@ namespace Frends.Community.IBMMQ
                 {
                     message = new MQMessage();
                     queue.Get(message, getOptions);
-                    output.Data = QueueMessage.FromMqMessage(message, input.MessageAsBytes, input.GetMessageProperties, input.GetMessageDescriptor, input.ParseRFH2Header);
+                    output.Data = IBMMQHelpers.IBMMQMessageToQueueMessage(message, input.MessageAsBytes, input.GetMessageProperties, input.GetMessageDescriptor, input.ParseRFH2Header);
                     output.MessageFound = true;
                 }
                 catch (MQException mqe)

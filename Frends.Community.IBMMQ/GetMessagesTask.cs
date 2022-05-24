@@ -51,7 +51,7 @@ namespace Frends.Community.IBMMQ
                                 message = new MQMessage();
                                 queue.Get(message, getMessageOptions);
 
-                                output.Data.Add(QueueMessage.FromMqMessage(message, input.MessageAsBytes, input.GetMessageProperties, input.GetMessageDescriptor, input.ParseRFH2Header));
+                                output.Data.Add(IBMMQHelpers.IBMMQMessageToQueueMessage(message, input.MessageAsBytes, input.GetMessageProperties, input.GetMessageDescriptor, input.ParseRFH2Header));
                             }
                             catch (MQException mqe)
                             {
@@ -97,7 +97,7 @@ namespace Frends.Community.IBMMQ
                         {
                             message = new MQMessage();
                             queue.Get(message);
-                            output.Data.Add(QueueMessage.FromMqMessage(message, input.MessageAsBytes, input.GetMessageProperties, input.GetMessageDescriptor, input.ParseRFH2Header));
+                            output.Data.Add(IBMMQHelpers.IBMMQMessageToQueueMessage(message, input.MessageAsBytes, input.GetMessageProperties, input.GetMessageDescriptor, input.ParseRFH2Header));
                         }
                         catch (MQException mqe)
                         {

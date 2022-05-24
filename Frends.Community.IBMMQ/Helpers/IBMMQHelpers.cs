@@ -314,5 +314,106 @@ namespace Frends.Community.IBMMQ.Helpers
         }
 
         #endregion
+
+        /// <summary>
+        /// Method to convert IMB MQ Queue Message (MQMessage) to its internal representation (QueueMessage)
+        /// </summary>
+        /// <param name="mqMessage">IBM MQ Message to convert to internal QueueMessage</param>
+        /// <param name="asBytes">true/false, if true return message contents as bytes (using MessageBytes-field instead of Message-field)</param>
+        /// <param name="returnMQProperties">true/false, if true return Message Properties in addition to the actual message</param>
+        /// <param name="returnMQMD">true/false, if true return Message Descriptor in addition to the actual message</param>
+        /// <param name="returnAndStripRFH2Header">true/false, if true try to parse and remove RFH2 headers from the message</param>
+        /// <returns>QueueMessage</returns>
+        public static QueueMessage IBMMQMessageToQueueMessage(MQMessage mqMessage, bool asBytes, bool returnMQProperties = true, bool returnMQMD = false, bool returnAndStripRFH2Header = false)
+        {
+            var rfh2Result = new MessageAndRFH2Header() { RFH2HeadersFound = false };
+
+            // Try to extract RFH2 headers only if requested
+            if (returnAndStripRFH2Header)
+                rfh2Result = ReadAndStripRFH2Header(mqMessage);
+
+            return new QueueMessage
+            {
+                // Include properties only if required
+                MessageProperties = !returnMQProperties ? null : new MessageProperties
+                {
+                    Encoding = mqMessage.Encoding,
+                    Expiry = mqMessage.Expiry,
+                    Feedback = mqMessage.Feedback,
+                    Format = mqMessage.Format.Trim(),
+                    Offset = mqMessage.Offset,
+                    Persistence = mqMessage.Persistence,
+                    Priority = mqMessage.Priority,
+                    Report = mqMessage.Report,
+                    Version = mqMessage.Version,
+                    AccountingToken = mqMessage.AccountingToken,
+                    BackoutCount = mqMessage.BackoutCount,
+                    CharacterSet = mqMessage.CharacterSet,
+                    CorrelationId = mqMessage.CorrelationId,
+                    DataLength = mqMessage.DataLength,
+                    DataOffset = mqMessage.DataOffset,
+                    GroupId = mqMessage.GroupId,
+                    MessageFlags = mqMessage.MessageFlags,
+                    MessageId = mqMessage.MessageId,
+                    MessageLength = mqMessage.MessageLength,
+                    MessageType = mqMessage.MessageType,
+                    OriginalLength = mqMessage.OriginalLength,
+                    PropertyValidation = mqMessage.PropertyValidation,
+                    UserId = mqMessage.UserId.Trim(),
+                    ApplicationIdData = mqMessage.ApplicationIdData.Trim(),
+                    ApplicationOriginData = mqMessage.ApplicationOriginData.Trim(),
+                    MessageSequenceNumber = mqMessage.MessageSequenceNumber,
+                    PutApplicationName = mqMessage.PutApplicationName.Trim(),
+                    PutApplicationType = mqMessage.PutApplicationType,
+                    PutDateTime = mqMessage.PutDateTime,
+                    TotalMessageLength = mqMessage.TotalMessageLength,
+                    ReplyToQueueName = mqMessage.ReplyToQueueName.Trim(),
+                    ReplyToQueueManagerName = mqMessage.ReplyToQueueManagerName.Trim()
+                },
+
+                // Return MessageDescriptor only if requested
+                MessageDescriptor = !returnMQMD ? null : new MessageDescriptor
+                {
+                    StructMQMD = mqMessage.MQMD.StructMQMD,
+                    Version = mqMessage.MQMD.Version,
+                    Encoding = mqMessage.MQMD.Encoding,
+                    BackoutCount = mqMessage.MQMD.BackoutCount,
+                    Ccsid = mqMessage.MQMD.Ccsid,
+                    MsgId = mqMessage.MQMD.MsgId,
+                    CorrelId = mqMessage.MQMD.CorrelId,
+                    Report = mqMessage.MQMD.Report,
+                    MsgType = mqMessage.MQMD.MsgType,
+                    Expiry = mqMessage.MQMD.Expiry,
+                    Feedback = mqMessage.MQMD.Feedback,
+                    CodedCharacterSetId = mqMessage.MQMD.CodedCharacterSetId,
+                    Format = mqMessage.MQMD.Format,
+                    Priority = mqMessage.MQMD.Priority,
+                    Persistence = mqMessage.MQMD.Persistence,
+                    ReplyToQueue = mqMessage.MQMD.ReplyToQueue,
+                    ReplyToQueueMgr = mqMessage.MQMD.ReplyToQueueMgr,
+                    UserID = mqMessage.MQMD.UserID,
+                    AccountingToken = mqMessage.MQMD.AccountingToken,
+                    ApplIdentityData = mqMessage.MQMD.ApplIdentityData,
+                    PutApplType = mqMessage.MQMD.PutApplType,
+                    PutApplName = mqMessage.MQMD.PutApplName,
+                    PutDate = mqMessage.MQMD.PutDate,
+                    PutTime = mqMessage.MQMD.PutTime,
+                    ApplOriginData = mqMessage.MQMD.ApplOriginData,
+                    GroupID = mqMessage.MQMD.GroupID,
+                    MsgSequenceNumber = mqMessage.MQMD.MsgSequenceNumber,
+                    Offset = mqMessage.MQMD.Offset,
+                    MsgFlags = mqMessage.MQMD.MsgFlags,
+                    OriginalLength = mqMessage.MQMD.OriginalLength,
+                },
+
+                // RFH2 headers is null if not found or not even tried to extract
+                RFH2Headers = !rfh2Result.RFH2HeadersFound ? null : rfh2Result.Headers,
+
+                // Only Message or MessageBytes is set, field depends whether Messages was requested as bytes or as text
+                Message = !asBytes ? mqMessage.ReadString(mqMessage.MessageLength) : null,
+                MessageBytes = asBytes ? mqMessage.ReadBytes(mqMessage.MessageLength) : null
+            };
+        }
+
     }
 }

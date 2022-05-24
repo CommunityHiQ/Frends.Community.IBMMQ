@@ -400,12 +400,17 @@ Put a message to a queue.
 | Set RFH2 Headers | bool               | Whether to set RFH2 headers to the message or not | No       |
 | RFH2 Headers | array of Name-Value -pairs | If previous parameter set to Yes, RFH2 headers will be written to the message using default values or explicit values given here. Only one NameValueData-field is supported, NameValueLength should not be given, it will be calculated based on the contents of NameValueData. See header names, types and default values from IBM MQ Documentation: https://www.ibm.com/docs/en/ibm-mq/9.2?topic=2-initial-values-language-declarations-mqrfh2 | Format : MQSTR, NameValueData : ```<mcd><Msd>text</Msd></mcd>```|
 
-
 ### Returns
 
 | Property             | Type                 | Description                          | Example |
 | ---------------------| ---------------------| ------------------------------------ | -----   |
 | Success              | bool                 | True/False indicating the result of the Put operation, true if it was successful | true |
+
+# Known issues
+
+Tasks currently work only on machines using Little Endian integer encoding, Big Endian is not supported or tested even though there are some implementation regarding checking Big Endianess in the source code.
+
+Putting messages to a queue with RFH2 headers allows only one NameValueData to be set even though there may be several when reading messages that were put by another party. When reading messages different sections are combined into one.
 
 # License
 
