@@ -3,10 +3,11 @@ Frends task for operating on IMBMQ queues. Supports reading and writing messages
 
 - [Installing](#installing)
 - [Tasks](#tasks)
-  - [Get Queue Status](#GetQueueStatus)
-  - [Get Messages](#GetMessages)
-  - [Peek Message](#PeekMessage)
-  - [Put Message](#PutMessage)
+  - [Get Queue Status](#getqueuestatus)
+  - [Get Messages](#getmessages)
+  - [Peek Message](#peekmessage)
+  - [Put Message](#putmessage)
+- [Known issues](#known-issues)
 - [License](#license)
 - [Building](#building)
 - [Contributing](#contributing)
@@ -241,8 +242,8 @@ Get the first message from the queue without removing it from the queue.
 | Property             | Type                 | Description                          | Example  |
 | ---------------------| ---------------------| ------------------------------------ | -----    |
 | SslCertStore         | string               | Cert store to use                    | MyStore  |
-| SslCipherSpec        | string               | Cipher spec to use                   | TODO     |
-| SslPeerName          | string               | Peer name to use                     | TODO     |
+| SslCipherSpec        | string               | Cipher spec to use                   |          |
+| SslPeerName          | string               | Peer name to use                     |          |
 | SslResetCount        | int                  | Reset count                          | 0        |
 | SslCertRevocationCheck | bool               | Cert revocation check performed      | No       |
 
@@ -412,6 +413,8 @@ Tasks currently work only on machines using Little Endian integer encoding, Big 
 
 Putting messages to a queue with RFH2 headers allows only one NameValueData to be set even though there may be several when reading messages that were put by another party. When reading messages different sections are combined into one.
 
+Importing Task package packed with dotnet pack doesn't work for unknown reason, this is why nuget.exe pack and nuspec are used.
+
 # License
 
 This project is licensed under the MIT License - see the LICENSE file for details
@@ -431,6 +434,8 @@ Rebuild the project
 Run Tests with nunit3. Tests can be found under
 
 `Frends.Community.IBMMQ.Tests\bin\Release\Frends.Community.IBMMQ.Tests.dll`
+
+**NB**: You need to have IBM MQ installed and configured properly for these tests to pass
 
 Create a nuget package
 
