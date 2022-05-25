@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Frends.Community.IBMMQ.Tests
 {
+    [Ignore("IBMMQ is not installed on build server.")]
     [TestClass]
     public class PeekMessageFromQueueTaskTests
     {
@@ -13,7 +14,10 @@ namespace Frends.Community.IBMMQ.Tests
                 new PeekMessageTaskParameters
                 {
                     Queue = "DEV.QUEUE.1",
-                    MessageAsBytes = false
+                    MessageAsBytes = false,
+                    GetMessageDescriptor = false,
+                    GetMessageProperties = false,
+                    ParseRFH2Header = false
                 },
                 new ConnectionParameters
                 {

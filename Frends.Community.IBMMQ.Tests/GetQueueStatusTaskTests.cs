@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Frends.Community.IBMMQ.Tests
 {
+    [Ignore("IBMMQ is not installed on build server.")]
     [TestClass]
     public class GetQueueStatusTaskTests
     {

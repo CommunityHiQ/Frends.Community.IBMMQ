@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Frends.Community.IBMMQ</id>
-    <version>1.0.83</version>
+    <version>1.0.89</version>
     <title>Frends IBMMQ Tasks</title>
     <authors>HiQ Finland</authors>
     <owners>HiQ Finland</owners>
