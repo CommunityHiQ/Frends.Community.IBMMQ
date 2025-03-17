@@ -1,6 +1,8 @@
 # Frends.Community.IBMMQ
 Frends task for operating on IMBMQ queues. Supports reading and writing messages from/to a queue and getting some metadata of queues.
 
+Note that on crossplatform transactions don't work.
+
 - [Installing](#installing)
 - [Tasks](#tasks)
   - [Get Queue Status](#getqueuestatus)
@@ -201,7 +203,7 @@ See detailed information of all RFH2 headers from IBM MQ Documentation: <https:/
 
 | Property            | Type                 | Description                          | Example      |
 | --------------------| ---------------------| ------------------------------------ | -----        |
-| StrucId             | string               | StrucId                              | RFH¬         |
+| StrucId             | string               | StrucId                              | RFHï¿½         |
 | Version             | int                  | Version                              | 2            |
 | StrucLength         | int                  | StrucLength including NameValue-fields | 36         |
 | Encoding            | int                  | Encoding                             | 546          |
@@ -345,7 +347,7 @@ See detailed information of all RFH2 headers from IBM MQ Documentation: <https:/
 
 | Property            | Type                 | Description                          | Example      |
 | --------------------| ---------------------| ------------------------------------ | -----        |
-| StrucId             | string               | StrucId                              | RFH¬         |
+| StrucId             | string               | StrucId                              | RFHï¿½         |
 | Version             | int                  | Version                              | 2            |
 | StrucLength         | int                  | StrucLength including NameValue-fields | 36         |
 | Encoding            | int                  | Encoding                             | 546          |
@@ -456,4 +458,5 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 | Version              | Changes                 |
 | ---------------------| ------------------------|
-| 1.1.0                | Initial version of IBMMQ Tasks |
+| 1.0.x               | Initial version of IBMMQ Tasks |
+| 1.1.1               | .NET 8 version of task (crossplatform only), transactions don't work on this version. |

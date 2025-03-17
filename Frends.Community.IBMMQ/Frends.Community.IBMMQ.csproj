@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8</TargetFramework>
     <authors>HiQ Finland</authors>
     <copyright>HiQ Finland</copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -10,7 +10,7 @@
     <IncludeSource>true</IncludeSource>
     <PackageTags>Frends</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.89</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,24 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    
-    <!-- Import to frends with IBM MQ Client library doesn't work,
-         therefore dll's are locally included -->
-    
-    <!--<PackageReference Include="IBMMQDotnetClient" Version="9.2.5" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />-->
-    
-    <Reference Include="amqmdnetstd, Version=9.2.5.0, Culture=neutral, PublicKeyToken=23d6cb914eeaac0e">
-      <HintPath>..\IBMMQ\amqmdnetstd.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
-
-    <Reference Include="System.ComponentModel.Annotations, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>..\IBMMQ\System.ComponentModel.Annotations.dll</HintPath>
-      <SpecificVersion>false</SpecificVersion>
-      <Private>true</Private>
-    </Reference>
-
+    <PackageReference Include="IBMMQDotnetClient" Version="9.4.2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
 </Project>
