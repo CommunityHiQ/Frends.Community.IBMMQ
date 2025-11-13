@@ -456,7 +456,8 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 # Change Log
 
-| Version              | Changes                 |
-| ---------------------| ------------------------|
-| 1.0.x               | Initial version of IBMMQ Tasks |
+| Version              | Changes                                                                               |
+| ---------------------|---------------------------------------------------------------------------------------|
+| 1.0.x               | Initial version of IBMMQ Tasks                                                        |
 | 1.1.1               | .NET 8 version of task (crossplatform only), transactions don't work on this version. |
+| 1.2.0               | Update IBMMQDotnetClient from 9.4.2 to 9.4.4.                                         |
