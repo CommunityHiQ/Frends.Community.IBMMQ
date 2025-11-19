@@ -12,16 +12,20 @@ namespace Frends.Community.IBMMQ.Helpers
     {
         public static MQQueueManager CreateQMgrConnection(ConnectionParameters connection, TaskOptions options)
         {
-            var connectionProperties = new Hashtable {
-                { MQC.TRANSPORT_PROPERTY, MQC.TRANSPORT_MQSERIES_MANAGED},
+            var connectionProperties = new Hashtable
+            {
+                { MQC.TRANSPORT_PROPERTY, GetIbmMqcConnectionType(options.ConnectionType) },
                 { MQC.HOST_NAME_PROPERTY, connection.HostName },
                 { MQC.PORT_PROPERTY, connection.PortNumber },
-                { MQC.CHANNEL_PROPERTY, connection.Channel }  };
+                { MQC.CHANNEL_PROPERTY, connection.Channel }
+            };
 
             if (options.SslCertStore != "") connectionProperties.Add(MQC.SSL_CERT_STORE_PROPERTY, options.SslCertStore);
-            if (options.SslCipherSpec != "") connectionProperties.Add(MQC.SSL_CIPHER_SPEC_PROPERTY, options.SslCipherSpec);
+            if (options.SslCipherSpec != "")
+                connectionProperties.Add(MQC.SSL_CIPHER_SPEC_PROPERTY, options.SslCipherSpec);
             if (options.SslPeerName != "") connectionProperties.Add(MQC.SSL_PEER_NAME_PROPERTY, options.SslPeerName);
-            if (options.SslResetCount != 0) connectionProperties.Add(MQC.SSL_RESET_COUNT_PROPERTY, options.SslResetCount);
+            if (options.SslResetCount != 0)
+                connectionProperties.Add(MQC.SSL_RESET_COUNT_PROPERTY, options.SslResetCount);
             if (connection.UserId != "") connectionProperties.Add(MQC.USER_ID_PROPERTY, connection.UserId);
             if (connection.Password != "") connectionProperties.Add(MQC.PASSWORD_PROPERTY, connection.Password);
             if (options.SslCertRevocationCheck) MQEnvironment.SSLCertRevocationCheck = true;
@@ -35,10 +39,10 @@ namespace Frends.Community.IBMMQ.Helpers
         /// <param name="message"></param>
         /// <param name="messageProperties"></param>
         /// <param name="messageAsBytes"></param>
-        public static void SetMessagePropertiesAndHeaders(MQMessage message, PutMessageProperties messageProperties, bool messageAsBytes)
+        public static void SetMessagePropertiesAndHeaders(MQMessage message, PutMessageProperties messageProperties,
+            bool messageAsBytes)
         {
-
-            // Message descriptors (MQMD) 
+            // Message descriptors (MQMD)
             if (messageProperties.Descriptors.Length > 0)
                 foreach (var kvp in messageProperties.Descriptors)
                 {
@@ -71,7 +75,7 @@ namespace Frends.Community.IBMMQ.Helpers
         }
 
         /// <summary>
-        ///     Generic extension method to set object properties, 
+        ///     Generic extension method to set object properties,
         ///     used for instance to set MQ Message properties and decriptor values.
         ///     Code borrowed (with minor modifications) from: https://social.technet.microsoft.com/wiki/contents/articles/54296.dynamically-set-property-value-in-a-class-c.aspx
         /// </summary>
@@ -140,7 +144,7 @@ namespace Frends.Community.IBMMQ.Helpers
 
         /// <summary>
         ///     Method to check if there is an RFH2 header in the message.
-        ///     If there is, parse and remove it and return object containing 
+        ///     If there is, parse and remove it and return object containing
         ///     the header information.
         /// </summary>
         /// <param name="message">MQMessage to read RFH2 Headers from</param>
@@ -152,10 +156,7 @@ namespace Frends.Community.IBMMQ.Helpers
             // Little endian is the default
             bool bigEndian = false;
 
-            RFH2Headers rfh = new RFH2Headers
-            {
-                StrucId = Encoding.UTF8.GetString(message.ReadBytes(4))
-            };
+            RFH2Headers rfh = new RFH2Headers { StrucId = Encoding.UTF8.GetString(message.ReadBytes(4)) };
 
             // Check if start of message contains RFH header data
             // If not, then reset to the beginning of the message and return
@@ -219,6 +220,7 @@ namespace Frends.Community.IBMMQ.Helpers
 
                 bytesLeft = bytesLeft - 4 - dataPartLength;
             }
+
             rfh.NameValueData = data.ToString();
             rfh.NameValueLength = Encoding.UTF8.GetBytes(data.ToString()).Length;
 
@@ -231,7 +233,7 @@ namespace Frends.Community.IBMMQ.Helpers
         /// <summary>
         /// Method to write RFH2 headers to a MQ Message.
         /// Allows only one NameValueLength/Data pair to be written.
-        /// 
+        ///
         /// Offers setting headers values individually, default values are used for headers not explicitly given.
         /// </summary>
         /// <param name="message">MQ Message headers are written to</param>
@@ -275,7 +277,7 @@ namespace Frends.Community.IBMMQ.Helpers
             // come calculations in order to be able to read the headers correctly
             // Eg. ä, Ä, ö, Ö chracters require two bytes
             // Pad string data to match the byte length of the nearest multiply of 4
-            // 
+            //
             // Examples
             // - "AA"   -> "AA  "   (two 1-byte chars + two whitepace = 4 bytes)
             // - "AÖ"   -> "AÖ "    (one 1-byte char + one 2-byte char + one whitespace = 4 bytes)
@@ -287,7 +289,9 @@ namespace Frends.Community.IBMMQ.Helpers
                 headers.StrucLength += lenByteCorrected + 4;
 
             message.WriteInt4(bigEndian ? SwapBytes(headers.StrucLength) : headers.StrucLength);
-            message.WriteInt4(bigEndian ? SwapBytes(headers.Encoding) : headers.Encoding); // BigEndian: 273, LittleEndian: 546
+            message.WriteInt4(bigEndian
+                ? SwapBytes(headers.Encoding)
+                : headers.Encoding); // BigEndian: 273, LittleEndian: 546
             message.WriteInt4(bigEndian ? SwapBytes(headers.CodedCharSetId) : headers.CodedCharSetId);
             message.WriteString(headers.Format.PadRight(8, ' '));
             message.WriteInt4(bigEndian ? SwapBytes(headers.Flags) : headers.Flags);
@@ -324,7 +328,8 @@ namespace Frends.Community.IBMMQ.Helpers
         /// <param name="returnMQMD">true/false, if true return Message Descriptor in addition to the actual message</param>
         /// <param name="returnAndStripRFH2Header">true/false, if true try to parse and remove RFH2 headers from the message</param>
         /// <returns>QueueMessage</returns>
-        public static QueueMessage IBMMQMessageToQueueMessage(MQMessage mqMessage, bool asBytes, bool returnMQProperties = true, bool returnMQMD = false, bool returnAndStripRFH2Header = false)
+        public static QueueMessage IBMMQMessageToQueueMessage(MQMessage mqMessage, bool asBytes,
+            bool returnMQProperties = true, bool returnMQMD = false, bool returnAndStripRFH2Header = false)
         {
             var rfh2Result = new MessageAndRFH2Header() { RFH2HeadersFound = false };
 
@@ -335,76 +340,80 @@ namespace Frends.Community.IBMMQ.Helpers
             return new QueueMessage
             {
                 // Include properties only if required
-                MessageProperties = !returnMQProperties ? null : new MessageProperties
-                {
-                    Encoding = mqMessage.Encoding,
-                    Expiry = mqMessage.Expiry,
-                    Feedback = mqMessage.Feedback,
-                    Format = mqMessage.Format.Trim(),
-                    Offset = mqMessage.Offset,
-                    Persistence = mqMessage.Persistence,
-                    Priority = mqMessage.Priority,
-                    Report = mqMessage.Report,
-                    Version = mqMessage.Version,
-                    AccountingToken = mqMessage.AccountingToken,
-                    BackoutCount = mqMessage.BackoutCount,
-                    CharacterSet = mqMessage.CharacterSet,
-                    CorrelationId = mqMessage.CorrelationId,
-                    DataLength = mqMessage.DataLength,
-                    DataOffset = mqMessage.DataOffset,
-                    GroupId = mqMessage.GroupId,
-                    MessageFlags = mqMessage.MessageFlags,
-                    MessageId = mqMessage.MessageId,
-                    MessageLength = mqMessage.MessageLength,
-                    MessageType = mqMessage.MessageType,
-                    OriginalLength = mqMessage.OriginalLength,
-                    PropertyValidation = mqMessage.PropertyValidation,
-                    UserId = mqMessage.UserId.Trim(),
-                    ApplicationIdData = mqMessage.ApplicationIdData.Trim(),
-                    ApplicationOriginData = mqMessage.ApplicationOriginData.Trim(),
-                    MessageSequenceNumber = mqMessage.MessageSequenceNumber,
-                    PutApplicationName = mqMessage.PutApplicationName.Trim(),
-                    PutApplicationType = mqMessage.PutApplicationType,
-                    PutDateTime = mqMessage.PutDateTime,
-                    TotalMessageLength = mqMessage.TotalMessageLength,
-                    ReplyToQueueName = mqMessage.ReplyToQueueName.Trim(),
-                    ReplyToQueueManagerName = mqMessage.ReplyToQueueManagerName.Trim()
-                },
+                MessageProperties = !returnMQProperties
+                    ? null
+                    : new MessageProperties
+                    {
+                        Encoding = mqMessage.Encoding,
+                        Expiry = mqMessage.Expiry,
+                        Feedback = mqMessage.Feedback,
+                        Format = mqMessage.Format.Trim(),
+                        Offset = mqMessage.Offset,
+                        Persistence = mqMessage.Persistence,
+                        Priority = mqMessage.Priority,
+                        Report = mqMessage.Report,
+                        Version = mqMessage.Version,
+                        AccountingToken = mqMessage.AccountingToken,
+                        BackoutCount = mqMessage.BackoutCount,
+                        CharacterSet = mqMessage.CharacterSet,
+                        CorrelationId = mqMessage.CorrelationId,
+                        DataLength = mqMessage.DataLength,
+                        DataOffset = mqMessage.DataOffset,
+                        GroupId = mqMessage.GroupId,
+                        MessageFlags = mqMessage.MessageFlags,
+                        MessageId = mqMessage.MessageId,
+                        MessageLength = mqMessage.MessageLength,
+                        MessageType = mqMessage.MessageType,
+                        OriginalLength = mqMessage.OriginalLength,
+                        PropertyValidation = mqMessage.PropertyValidation,
+                        UserId = mqMessage.UserId.Trim(),
+                        ApplicationIdData = mqMessage.ApplicationIdData.Trim(),
+                        ApplicationOriginData = mqMessage.ApplicationOriginData.Trim(),
+                        MessageSequenceNumber = mqMessage.MessageSequenceNumber,
+                        PutApplicationName = mqMessage.PutApplicationName.Trim(),
+                        PutApplicationType = mqMessage.PutApplicationType,
+                        PutDateTime = mqMessage.PutDateTime,
+                        TotalMessageLength = mqMessage.TotalMessageLength,
+                        ReplyToQueueName = mqMessage.ReplyToQueueName.Trim(),
+                        ReplyToQueueManagerName = mqMessage.ReplyToQueueManagerName.Trim()
+                    },
 
                 // Return MessageDescriptor only if requested
-                MessageDescriptor = !returnMQMD ? null : new MessageDescriptor
-                {
-                    StructMQMD = mqMessage.MQMD.StructMQMD,
-                    Version = mqMessage.MQMD.Version,
-                    Encoding = mqMessage.MQMD.Encoding,
-                    BackoutCount = mqMessage.MQMD.BackoutCount,
-                    Ccsid = mqMessage.MQMD.Ccsid,
-                    MsgId = mqMessage.MQMD.MsgId,
-                    CorrelId = mqMessage.MQMD.CorrelId,
-                    Report = mqMessage.MQMD.Report,
-                    MsgType = mqMessage.MQMD.MsgType,
-                    Expiry = mqMessage.MQMD.Expiry,
-                    Feedback = mqMessage.MQMD.Feedback,
-                    CodedCharacterSetId = mqMessage.MQMD.CodedCharacterSetId,
-                    Format = mqMessage.MQMD.Format,
-                    Priority = mqMessage.MQMD.Priority,
-                    Persistence = mqMessage.MQMD.Persistence,
-                    ReplyToQueue = mqMessage.MQMD.ReplyToQueue,
-                    ReplyToQueueMgr = mqMessage.MQMD.ReplyToQueueMgr,
-                    UserID = mqMessage.MQMD.UserID,
-                    AccountingToken = mqMessage.MQMD.AccountingToken,
-                    ApplIdentityData = mqMessage.MQMD.ApplIdentityData,
-                    PutApplType = mqMessage.MQMD.PutApplType,
-                    PutApplName = mqMessage.MQMD.PutApplName,
-                    PutDate = mqMessage.MQMD.PutDate,
-                    PutTime = mqMessage.MQMD.PutTime,
-                    ApplOriginData = mqMessage.MQMD.ApplOriginData,
-                    GroupID = mqMessage.MQMD.GroupID,
-                    MsgSequenceNumber = mqMessage.MQMD.MsgSequenceNumber,
-                    Offset = mqMessage.MQMD.Offset,
-                    MsgFlags = mqMessage.MQMD.MsgFlags,
-                    OriginalLength = mqMessage.MQMD.OriginalLength,
-                },
+                MessageDescriptor = !returnMQMD
+                    ? null
+                    : new MessageDescriptor
+                    {
+                        StructMQMD = mqMessage.MQMD.StructMQMD,
+                        Version = mqMessage.MQMD.Version,
+                        Encoding = mqMessage.MQMD.Encoding,
+                        BackoutCount = mqMessage.MQMD.BackoutCount,
+                        Ccsid = mqMessage.MQMD.Ccsid,
+                        MsgId = mqMessage.MQMD.MsgId,
+                        CorrelId = mqMessage.MQMD.CorrelId,
+                        Report = mqMessage.MQMD.Report,
+                        MsgType = mqMessage.MQMD.MsgType,
+                        Expiry = mqMessage.MQMD.Expiry,
+                        Feedback = mqMessage.MQMD.Feedback,
+                        CodedCharacterSetId = mqMessage.MQMD.CodedCharacterSetId,
+                        Format = mqMessage.MQMD.Format,
+                        Priority = mqMessage.MQMD.Priority,
+                        Persistence = mqMessage.MQMD.Persistence,
+                        ReplyToQueue = mqMessage.MQMD.ReplyToQueue,
+                        ReplyToQueueMgr = mqMessage.MQMD.ReplyToQueueMgr,
+                        UserID = mqMessage.MQMD.UserID,
+                        AccountingToken = mqMessage.MQMD.AccountingToken,
+                        ApplIdentityData = mqMessage.MQMD.ApplIdentityData,
+                        PutApplType = mqMessage.MQMD.PutApplType,
+                        PutApplName = mqMessage.MQMD.PutApplName,
+                        PutDate = mqMessage.MQMD.PutDate,
+                        PutTime = mqMessage.MQMD.PutTime,
+                        ApplOriginData = mqMessage.MQMD.ApplOriginData,
+                        GroupID = mqMessage.MQMD.GroupID,
+                        MsgSequenceNumber = mqMessage.MQMD.MsgSequenceNumber,
+                        Offset = mqMessage.MQMD.Offset,
+                        MsgFlags = mqMessage.MQMD.MsgFlags,
+                        OriginalLength = mqMessage.MQMD.OriginalLength,
+                    },
 
                 // RFH2 headers is null if not found or not even tried to extract
                 RFH2Headers = !rfh2Result.RFH2HeadersFound ? null : rfh2Result.Headers,
@@ -415,5 +424,16 @@ namespace Frends.Community.IBMMQ.Helpers
             };
         }
 
+        private static string GetIbmMqcConnectionType(ConnectionType type)
+        {
+            return type switch
+            {
+                ConnectionType.Bindings => MQC.TRANSPORT_MQSERIES_BINDINGS,
+                ConnectionType.Client => MQC.TRANSPORT_MQSERIES_CLIENT,
+                ConnectionType.XaClient => MQC.TRANSPORT_MQSERIES_XACLIENT,
+                ConnectionType.Managed => MQC.TRANSPORT_MQSERIES_MANAGED,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Invalid ConnectionType value"),
+            };
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Frends.Community.IBMMQ.Helpers;
 
 #pragma warning disable 1591
 
@@ -41,7 +42,7 @@ namespace Frends.Community.IBMMQ
         public int MessageCount { get; set; }
 
         /// <summary>
-        /// If set to true, message contents are returned as a byte array. 
+        /// If set to true, message contents are returned as a byte array.
         /// Return field name is MessageBytes instead of Message
         /// </summary>
         [DefaultValue(false)]
@@ -62,7 +63,7 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Return and strip RFH2 headers from the beginning of the message so that they won't be seen in the actual message.
         /// RFH2 headers may be present in the message if the sender has written them.
-        /// 
+        ///
         /// This can be set to true with no ill effect even if the message doesn't have RFH2 headers.
         /// </summary>
         [DefaultValue(false)]
@@ -70,7 +71,7 @@ namespace Frends.Community.IBMMQ
 
         /// <summary>
         /// Use transaction when getting messages
-        /// 
+        ///
         /// If set to Yes, when getting multiple messages one by one from the queue they are rolled back in case
         /// there is an error or the task is cancelled.
         /// </summary>
@@ -114,7 +115,7 @@ namespace Frends.Community.IBMMQ
         public string Queue { get; set; }
 
         /// <summary>
-        /// If set to true, message contents are returned as a byte array. 
+        /// If set to true, message contents are returned as a byte array.
         /// Return field name is MessageBytes instead of Message
         /// </summary>
         [DefaultValue(false)]
@@ -135,7 +136,7 @@ namespace Frends.Community.IBMMQ
         /// <summary>
         /// Return and strip RFH2 headers from the beginning of the message so that they won't be seen in the actual message.
         /// RFH2 headers may be present in the message if the sender has written them.
-        /// 
+        ///
         /// This can be set to true with no ill effect even if the message doesn't have RFH2 headers.
         /// </summary>
         [DefaultValue(false)]
@@ -152,7 +153,7 @@ namespace Frends.Community.IBMMQ
         public string Queue { get; set; }
 
         /// <summary>
-        /// If set to true, message contents are returned as a byte array. 
+        /// If set to true, message contents are returned as a byte array.
         /// </summary>
         [DefaultValue(false)]
         public bool MessageAsBytes { get; set; }
@@ -236,15 +237,22 @@ namespace Frends.Community.IBMMQ
         /// SSL Certification Revocation check used
         /// </summary>
         public bool SslCertRevocationCheck { get; set; }
+
+        /// <summary>
+        /// Type of connection selectable from IBM MQC TRANSPORT_MQSERIES
+        /// More about types here: https://www.ibm.com/docs/en/ibm-mq/9.2.x?topic=SSFKSJ_9.2.0/com.ibm.mq.dev.doc/q029480_.htm
+        /// </summary>
+        [DefaultValue(ConnectionType.Managed)]
+        public ConnectionType ConnectionType { get; set; } = ConnectionType.Managed;
     }
 
     public class PutMessageProperties
     {
         /// <summary>
         /// Character set for the message.
-        /// 
+        ///
         /// Use Other to use values not listed.
-        /// 
+        ///
         /// Used ONLY if messages is sent as text (not as bytes).
         /// </summary>
         [DefaultValue(CharacterSetEnum.UTF8)]
@@ -262,14 +270,14 @@ namespace Frends.Community.IBMMQ
 
         /// <summary>
         /// Individual message properties. See fields and types from IBM MQ Documentation: https://www.ibm.com/docs/en/ibm-mq/9.2?topic=interfaces-mqmessagenet-class
-        /// 
+        ///
         /// Some values are derived and cannot be set explicitly.
         /// </summary>
         public MessageProperty[] Properties { get; set; }
 
         /// <summary>
         /// Message descriptors (MQMD) for the message. See fields and types from IBM MQ Documentation: https://www.ibm.com/docs/en/ibm-mq/9.2?topic=descriptor-fields-mqmd
-        /// 
+        ///
         /// Some values are derived and cannot be set explicitly.
         /// </summary>
         public MessageDescriptorProperty[] Descriptors { get; set; }
@@ -330,7 +338,7 @@ namespace Frends.Community.IBMMQ
     }
 
     /// <summary>
-    /// Put messsage output is simply an boolean indicator that the 
+    /// Put messsage output is simply an boolean indicator that the
     /// put was successful. In practice false-value is never returned as an Exception is
     /// thrown in case on an error.
     /// </summary>
