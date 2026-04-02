@@ -49,9 +49,9 @@ Get queue status information from desired queues. Can be used for example to get
 
 | Property               | Type           | Description                                                                     | Example                |
 |------------------------|----------------|---------------------------------------------------------------------------------|------------------------|
-| SslCertStore           | string         | Cert store to use                                                               | MyStore                |
-| SslCipherSpec          | string         | Cipher spec to use                                                              |                        |
-| SslPeerName            | string         | Peer name to use                                                                |                        |
+| SslCertStore           | string         | Cert store to use                                                               | Windows: *USER OR *SYSTEM depending on the cert. Linux: path to the kdb without extension.|
+| SslCipherSpec          | string         | Cipher spec to use                                                              |TLS_RSA_WITH_AES_256_CBC_SHA256|
+| SslPeerName            | string         | Peer name to use                                                                |CN=QM1,OU=MQ,O=MyCompany,C=FI|
 | SslResetCount          | int            | Reset count                                                                     | 0                      |
 | SslCertRevocationCheck | bool           | Cert revocation check performed                                                 | No                     |
 | ConnectionType         | ConnectionType | Enum that defines Type of connection selectable from IBM MQC TRANSPORT_MQSERIES | ConnectionType.Managed |
@@ -102,13 +102,14 @@ Get messages from a queue.
 
 ### Options
 
-| Property               | Type   | Description                     | Example |
-|------------------------|--------|---------------------------------|---------|
-| SslCertStore           | string | Cert store to use               | MyStore |
-| SslCipherSpec          | string | Cipher spec to use              |         |
-| SslPeerName            | string | Peer name to use                |         |
-| SslResetCount          | int    | Reset count                     | 0       |
-| SslCertRevocationCheck | bool   | Cert revocation check performed | No      |
+| Property               | Type           | Description                                                                     | Example                |
+|------------------------|----------------|---------------------------------------------------------------------------------|------------------------|
+| SslCertStore           | string         | Cert store to use                                                               | Windows: *USER OR *SYSTEM depending on the cert. Linux: path to the kdb without extension.|
+| SslCipherSpec          | string         | Cipher spec to use                                                              |TLS_RSA_WITH_AES_256_CBC_SHA256|
+| SslPeerName            | string         | Peer name to use                                                                |CN=QM1,OU=MQ,O=MyCompany,C=FI|
+| SslResetCount          | int            | Reset count                                                                     | 0                      |
+| SslCertRevocationCheck | bool           | Cert revocation check performed                                                 | No                     |
+| ConnectionType         | ConnectionType | Enum that defines Type of connection selectable from IBM MQC TRANSPORT_MQSERIES | ConnectionType.Managed |
 
 ### Returns
 
@@ -248,13 +249,14 @@ Get the first message from the queue without removing it from the queue.
 
 ### Options
 
-| Property               | Type   | Description                     | Example |
-|------------------------|--------|---------------------------------|---------|
-| SslCertStore           | string | Cert store to use               | MyStore |
-| SslCipherSpec          | string | Cipher spec to use              |         |
-| SslPeerName            | string | Peer name to use                |         |
-| SslResetCount          | int    | Reset count                     | 0       |
-| SslCertRevocationCheck | bool   | Cert revocation check performed | No      |
+| Property               | Type           | Description                                                                     | Example                |
+|------------------------|----------------|---------------------------------------------------------------------------------|------------------------|
+| SslCertStore           | string         | Cert store to use                                                               | Windows: *USER OR *SYSTEM depending on the cert. Linux: path to the kdb without extension.|
+| SslCipherSpec          | string         | Cipher spec to use                                                              |TLS_RSA_WITH_AES_256_CBC_SHA256|
+| SslPeerName            | string         | Peer name to use                                                                |CN=QM1,OU=MQ,O=MyCompany,C=FI|
+| SslResetCount          | int            | Reset count                                                                     | 0                      |
+| SslCertRevocationCheck | bool           | Cert revocation check performed                                                 | No                     |
+| ConnectionType         | ConnectionType | Enum that defines Type of connection selectable from IBM MQC TRANSPORT_MQSERIES | ConnectionType.Managed |
 
 ### Returns
 
@@ -394,13 +396,14 @@ Put a message to a queue.
 
 ### Options
 
-| Property               | Type   | Description                     | Example |
-|------------------------|--------|---------------------------------|---------|
-| SslCertStore           | string | Cert store to use               | MyStore |
-| SslCipherSpec          | string | Cipher spec to use              |         |
-| SslPeerName            | string | Peer name to use                |         |
-| SslResetCount          | int    | Reset count                     | 0       |
-| SslCertRevocationCheck | bool   | Cert revocation check performed | No      |
+| Property               | Type           | Description                                                                     | Example                |
+|------------------------|----------------|---------------------------------------------------------------------------------|------------------------|
+| SslCertStore           | string         | Cert store to use                                                               | Windows: *USER OR *SYSTEM depending on the cert. Linux: path to the kdb without extension.|
+| SslCipherSpec          | string         | Cipher spec to use                                                              |TLS_RSA_WITH_AES_256_CBC_SHA256|
+| SslPeerName            | string         | Peer name to use                                                                |CN=QM1,OU=MQ,O=MyCompany,C=FI|
+| SslResetCount          | int            | Reset count                                                                     | 0                      |
+| SslCertRevocationCheck | bool           | Cert revocation check performed                                                 | No                     |
+| ConnectionType         | ConnectionType | Enum that defines Type of connection selectable from IBM MQC TRANSPORT_MQSERIES | ConnectionType.Managed |
 
 ### Message properties
 
@@ -418,6 +421,10 @@ Put a message to a queue.
 | Property | Type | Description                                                                      | Example |
 |----------|------|----------------------------------------------------------------------------------|---------|
 | Success  | bool | True/False indicating the result of the Put operation, true if it was successful | true    |
+
+# Things to keep in mind
+
+Windows handles the certificate approach differently than Linux. With Windows Agent: MQ Certificate is on the Agent server Trusted Root Certification Authorities.
 
 # Known issues
 
